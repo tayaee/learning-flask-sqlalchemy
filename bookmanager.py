@@ -2,6 +2,7 @@ import os.path
 
 from flask import Flask
 from flask import flash
+from flask import redirect
 from flask import render_template
 from flask import request
 from flask_sqlalchemy import SQLAlchemy
@@ -38,6 +39,16 @@ def home():
             flash(error)
     books = Book.query.all()
     return render_template('home.html', books=books)
+
+
+@app.route('/update', methods=["POST"])
+def update():
+    newtitle = request.form.get('newtitle')
+    oldtitle = request.form.get('oldtitle')
+    book = Book.query.filter_by(title=oldtitle).first()
+    book.title = newtitle
+    db.session.commit()
+    return redirect('/')
 
 
 if __name__ == '__main__':
