@@ -51,6 +51,15 @@ def update():
     return redirect('/')
 
 
+@app.route('/delete', methods=["POST"])
+def delete():
+    title = request.form.get('title')
+    book = Book.query.filter_by(title=title).first()
+    db.session.delete(book)
+    db.session.commit()
+    return redirect('/')
+
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
