@@ -14,6 +14,6 @@ tutorial https://www.codementor.io/@garethdwyer/building-a-crud-application-with
     or
     set FLASK_APP=bookmanager.py & flask run
 
-## Test /
+## Test
 
     http://localhost:5000
