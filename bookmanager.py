@@ -6,6 +6,7 @@ from flask import redirect
 from flask import render_template
 from flask import request
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.exc import IntegrityError
 
 app = Flask(__name__)
 
@@ -26,13 +27,18 @@ class Book(db.Model):
 
 @app.route('/', methods=["GET", "POST"])
 def home():
+    books = []
     if request.form:
         title = request.form.get('title')
         error = None
         if title:
-            book = Book(title=title)
-            db.session.add(book)
-            db.session.commit()
+            try:
+                book = Book(title=title)
+                db.session.add(book)
+                db.session.commit()
+            except IntegrityError as e:
+                error = f'Title "{title}" exists.'
+                db.session.rollback()
         else:
             error = 'Title is required.'
         if error:
